@@ -32,15 +32,19 @@ namespace DnsTwisterMonitor.Core.Services
                 DomainFuzzerTypesList = null
             };
 
-            //Group results by fuzzer types
-            var list = domainViewComponentList.DistinctBy(i => i.AlgorithmType);
+            var ddd = ((10 / 20) * 100);
 
-            domainTestResultViewModel.DomainFuzzerTypesList = new List<DomainFuzzerType>
-            {
-                new DomainFuzzerType()
+            //Group results by fuzzer types
+            var results = domainViewComponentList.GroupBy(
+                p => p.AlgorithmType, (type, grouped) =>
+                new DomainFuzzerType
                 {
-                }
-            };
+                    FuzzerType = type,
+                    Count = grouped.Count(),
+                    Percentage = Convert.ToInt16((Convert.ToDecimal(grouped.Count()) / Convert.ToDecimal(domainViewComponentList.Count())) * 100m)
+                }).ToList();
+
+            domainTestResultViewModel.DomainFuzzerTypesList = results;
 
             return domainTestResultViewModel;
         }
@@ -48,12 +52,12 @@ namespace DnsTwisterMonitor.Core.Services
         private List<MonitorTestViewModel> MapToDomainViewComponent(TwisterResponseWrapper wrapper)
         {
             return wrapper.FuzzyDomainList.Select(fuzzyDomain => new MonitorTestViewModel()
-                {
-                    Url = fuzzyDomain.Domain,
-                    ImageUrl = _imageRenderService.GenerateImageUrl(fuzzyDomain.Domain),
-                    AlgorithmType = fuzzyDomain.FuzzerType,
-                    RedirectUrl = $"http://{fuzzyDomain.Domain}"
-                })
+            {
+                Url = fuzzyDomain.Domain,
+                ImageUrl = _imageRenderService.GenerateImageUrl(fuzzyDomain.Domain),
+                AlgorithmType = fuzzyDomain.FuzzerType,
+                RedirectUrl = $"http://{fuzzyDomain.Domain}"
+            })
                 .ToList();
         }
 

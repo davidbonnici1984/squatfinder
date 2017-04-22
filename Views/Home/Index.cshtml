@@ -1,15 +1,12 @@
-﻿@using DnsTwisterMonitor.Core.ViewModels
-@model DnsTwisterMonitor.Core.ViewModels.MonitorTestResultViewModel
+﻿@model DnsTwisterMonitor.Core.ViewModels.MonitorTestResultViewModel
 @{
     ViewData["Title"] = "DNS Twister Monitor";
 }
-
 
 <form asp-controller="Home" asp-action="Index" method="post">
     <input type="text" id="domainName" name="domainName" />
     <button>Analyze</button>
 </form>
-
 
 <style>
     .domain-container {
@@ -19,52 +16,57 @@
         border: 1px solid #f9f9f9;
     }
 
-    .domain-container:hover { box-shadow: 2px 2px 10px #f0f0f0; }
+        .domain-container:hover {
+            box-shadow: 2px 2px 10px #f0f0f0;
+        }
 
     .domain-thumbnail {
         width: 240px;
         height: 180px;
     }
 </style>
-
 @if (Model != null)
 {
-    <br/>
+    <br />
     <table class="table table-bordered table-striped table-responsive">
         <tbody>
             <tr>
                 <td class="text-center" colspan="4"><strong>Domain Name</strong></td>
                 <td class="text-center" colspan="4">http://betsson.com</td>
             </tr>
+
             <tr>
                 <td class="text-center" colspan="4"><strong>Total Domain Combinations</strong></td>
                 <td class="text-center" colspan="4">@Model.TotalCombinations</td>
             </tr>
-            <tr>
-                <td class="text-center" colspan="4"><strong>Mode: Addition</strong></td>
-                <td class="text-center" colspan="4">120</td>
-            </tr>
-            <tr>
-                <td class="text-center" colspan="4">Mode: Bitsquatting</td>
-                <td class="text-center" colspan="4">25</td>
-            </tr>
-            <tr>
-                <td class="text-center" colspan="4">Mode: Homoglyph</td>
-                <td class="text-center" colspan="4">10</td>
-            </tr>
+            @foreach (var type in Model.DomainFuzzerTypesList)
+            {
+
+                if (type.FuzzerType != "Original*")
+                {
+                    <tr>
+                        <td class="text-center" colspan="4"><strong>Mode: @type.FuzzerType</strong></td>
+                        <td class="text-center" colspan="4">
+                            @type.Count
+                            @Html.Raw($"[{type.Percentage}%]")
+                        </td>
+                    </tr>
+                }
+
+            }
         </tbody>
     </table>
 
-    <hr/>
+    <hr />
     foreach (var domain in Model.MonitorTestViewList)
     {
 
         <a href="@domain.Url" target="_blank">
             <div class="domain-container">
-                <img src="@domain.ImageUrl" alt="" class="domain-thumbnail"/>
-                <br/>
+                <img src="@domain.ImageUrl" alt="" class="domain-thumbnail" />
+                <br />
                 <p>
-                    Url: @domain.Url<br/>
+                    Url: @domain.Url<br />
                     Fuzzer Type: @domain.AlgorithmType
                 </p>
             </div>
