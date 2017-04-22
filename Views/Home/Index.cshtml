@@ -60,17 +60,22 @@
     <hr />
     foreach (var domain in Model.MonitorTestViewList)
     {
+        if (domain.IsValid)
+        {
+            <a href="http://@domain.Url" target="_blank">
+                <div class="domain-container">
 
-        <a href="@domain.Url" target="_blank">
-            <div class="domain-container">
-                <img src="@domain.ImageUrl" alt="" class="domain-thumbnail" />
-                <br />
-                <p>
-                    Url: @domain.Url<br />
-                    Fuzzer Type: @domain.AlgorithmType
-                </p>
-            </div>
-        </a>
+                    <img src="@domain.ImageUrl" alt="" class="domain-thumbnail" />
+                    }
+                    <br />
+                    <p>
+                        Url: @domain.Url<br />
+                        Fuzzer Type: @domain.AlgorithmType
+                        IsValid: @domain.IsValid
+                    </p>
+                </div>
+            </a>
+        }
     }
 
     <div style="clear: both;"></div>

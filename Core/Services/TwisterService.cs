@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using DnsTwisterMonitor.Core.Http;
 using DnsTwisterMonitor.Core.Models;
 using DnsTwisterMonitor.Core.ViewModels;
@@ -32,7 +33,12 @@ namespace DnsTwisterMonitor.Core.Services
                 DomainFuzzerTypesList = null
             };
 
-            var ddd = ((10 / 20) * 100);
+
+            foreach (var domain in domainTestResultViewModel.MonitorTestViewList)
+            {
+                domain.IsValid = DoGetHostEntry(domain.Url);
+            }
+
 
             //Group results by fuzzer types
             var results = domainViewComponentList.GroupBy(
@@ -48,6 +54,27 @@ namespace DnsTwisterMonitor.Core.Services
 
             return domainTestResultViewModel;
         }
+
+        private bool DoGetHostEntry(string hostname)
+        {
+            try
+            {
+                var host = Dns.GetHostEntryAsync(hostname).Result;
+
+                if (host.Aliases.Length > 0 || host.AddressList.Length > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+          
+        }
+
 
         private List<MonitorTestViewModel> MapToDomainViewComponent(TwisterResponseWrapper wrapper)
         {

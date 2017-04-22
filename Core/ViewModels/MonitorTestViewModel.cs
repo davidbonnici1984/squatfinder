@@ -9,5 +9,7 @@ namespace DnsTwisterMonitor.Core.ViewModels
         public string Url { get; set; }
 
         public string AlgorithmType { get; set; }
+
+        public bool IsValid { get; set; }
     }
 }
