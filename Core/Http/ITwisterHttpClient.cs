@@ -7,4 +7,3 @@ namespace DnsTwisterMonitor.Core.Http
 		FuzzyResponseWrapper GetFuzzyDomains(string domainName);
 	}
 }
-

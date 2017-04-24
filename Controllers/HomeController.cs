@@ -1,4 +1,5 @@
-﻿using DnsTwisterMonitor.Core.Services;
+﻿using AutoMapper;
+using DnsTwisterMonitor.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DnsTwisterMonitor.Controllers
@@ -6,14 +7,27 @@ namespace DnsTwisterMonitor.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ITwisterService _twisterService;
+		private readonly IMapper _mapper;
 
-		public HomeController(ITwisterService twisterService)
+
+		public HomeController(ITwisterService twisterService, IMapper mapper)
 		{
 			_twisterService = twisterService;
+			_mapper = mapper;
 		}
 
 		public IActionResult Index()
 		{
+//
+//			var animal = new Animal()
+//			{
+//				Name = "David"
+//			};
+
+//			var obg = _mapper.Map<Animal, Person>(animal);
+			
+
+
 			return View();
 		}
 
