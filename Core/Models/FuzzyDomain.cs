@@ -16,7 +16,6 @@ namespace DnsTwisterMonitor.Core.Models
 		public bool IsDomainValid { get; set; }
 
 		public string FullDomainUrl => $"http://{Domain}";
-	    public string RenderedImageUrl { get; set; }
-
+		public string RenderedImageUrl { get; set; }
 	}
 }

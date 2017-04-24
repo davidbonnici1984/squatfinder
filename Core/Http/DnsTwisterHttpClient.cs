@@ -4,7 +4,7 @@ using RestSharp;
 namespace DnsTwisterMonitor.Core.Http
 {
 	public class DnsTwisterHttpClient : ITwisterHttpClient
-    {
+	{
 		private const string BaseUrl = "http://dnstwister.report/api/fuzz/";
 
 		public FuzzyResponseWrapper GetFuzzyDomains(string domainName)
