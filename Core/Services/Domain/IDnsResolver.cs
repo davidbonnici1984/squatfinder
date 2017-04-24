@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace DnsTwisterMonitor.Core.Services.Domain
+namespace SquatFinder.Web.Core.Services.Domain
 {
-    public interface IDnsResolver
-    {
-	    Task<bool> GetHostEntry(string hostname);
-    }
+	public interface IDnsResolver
+	{
+		Task<bool> GetHostEntry(string hostname);
+	}
 }

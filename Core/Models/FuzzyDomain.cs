@@ -1,6 +1,6 @@
 ﻿using RestSharp.Deserializers;
 
-namespace DnsTwisterMonitor.Core.Models
+namespace SquatFinder.Web.Core.Models
 {
 	public class FuzzyDomain
 	{

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace DnsTwisterMonitor.Core.Mapping
+namespace SquatFinder.Web.Core.Mapping
 {
 	public class TestMappingProfile : Profile
 	{

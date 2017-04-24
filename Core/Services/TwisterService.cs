@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using DnsTwisterMonitor.Core.Http;
-using DnsTwisterMonitor.Core.Models;
-using DnsTwisterMonitor.Core.Services.Domain;
-using DnsTwisterMonitor.Core.Services.Renders;
+using SquatFinder.Web.Core.Http;
+using SquatFinder.Web.Core.Models;
+using SquatFinder.Web.Core.Services.Domain;
+using SquatFinder.Web.Core.Services.Renders;
 
-namespace DnsTwisterMonitor.Core.Services
+namespace SquatFinder.Web.Core.Services
 {
 	public class TwisterService : ITwisterService
 	{
-		private readonly ITwisterHttpClient _twisterHttpClient;
-		private readonly IImageRenderService _imageRenderService;
 		private readonly IDnsResolver _dnsResolver;
+		private readonly IImageRenderService _imageRenderService;
+		private readonly ITwisterHttpClient _twisterHttpClient;
 
 		public TwisterService(ITwisterHttpClient twisterHttpClient,
 			IImageRenderService imageRenderService, IDnsResolver dnsResolver)

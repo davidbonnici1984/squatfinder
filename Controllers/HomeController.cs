@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using DnsTwisterMonitor.Core.Services;
 using Microsoft.AspNetCore.Mvc;
+using SquatFinder.Web.Core.Services;
 
-namespace DnsTwisterMonitor.Controllers
+namespace SquatFinder.Web.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ITwisterService _twisterService;
 		private readonly IMapper _mapper;
+		private readonly ITwisterService _twisterService;
 
 
 		public HomeController(ITwisterService twisterService, IMapper mapper)
@@ -25,7 +25,6 @@ namespace DnsTwisterMonitor.Controllers
 //			};
 
 //			var obg = _mapper.Map<Animal, Person>(animal);
-			
 
 
 			return View();

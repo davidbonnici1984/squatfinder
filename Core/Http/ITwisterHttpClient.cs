@@ -1,6 +1,6 @@
-﻿using DnsTwisterMonitor.Core.Models;
+﻿using SquatFinder.Web.Core.Models;
 
-namespace DnsTwisterMonitor.Core.Http
+namespace SquatFinder.Web.Core.Http
 {
 	public interface ITwisterHttpClient
 	{

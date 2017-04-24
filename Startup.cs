@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using DnsTwisterMonitor.Core.Http;
-using DnsTwisterMonitor.Core.Services;
-using DnsTwisterMonitor.Core.Services.Domain;
-using DnsTwisterMonitor.Core.Services.Renders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SquatFinder.Web.Core.Http;
+using SquatFinder.Web.Core.Services;
+using SquatFinder.Web.Core.Services.Domain;
+using SquatFinder.Web.Core.Services.Renders;
 
 namespace DnsTwisterMonitor
 {
@@ -23,9 +23,6 @@ namespace DnsTwisterMonitor
 				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
 				.AddEnvironmentVariables();
 			Configuration = builder.Build();
-
-
-
 		}
 
 		// This method gets called by the runtime. Use this method to add services to the container.
@@ -39,7 +36,6 @@ namespace DnsTwisterMonitor
 			services.AddTransient<ITwisterService, TwisterService>();
 			services.AddTransient<IImageRenderService, UrlToPngService>();
 			services.AddTransient<IDnsResolver, DefaultDnsResolver>();
-
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,8 +62,6 @@ namespace DnsTwisterMonitor
 					"default",
 					"{controller=Home}/{action=Index}/{id?}");
 			});
-
 		}
 	}
-	
 }

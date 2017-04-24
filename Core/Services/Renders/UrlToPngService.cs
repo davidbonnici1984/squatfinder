@@ -2,14 +2,14 @@
 using System.Text;
 using RestSharp.Extensions.MonoHttp;
 
-namespace DnsTwisterMonitor.Core.Services.Renders
+namespace SquatFinder.Web.Core.Services.Renders
 {
 	public class UrlToPngService : IImageRenderService
 	{
-		private const string UrlToPngBaseUrl = "http://api.url2png.com/v6/";
-		private const string UrlToPngApiKey = "P7FC1E9A0D0E091";
-		private const string UrlToPngPrivateKey = "S_2D799EC4593F0";
-		private const int Delay = 3;
+		private const string BASE_URL = "http://api.url2png.com/v6/";
+		private const string API_KEY = "P7FC1E9A0D0E091";
+		private const string PRIVATE_KEY = "S_2D799EC4593F0";
+		private const int DELAY = 3;
 
 		public string GenerateImageUrl(string domainUrl)
 		{
@@ -20,11 +20,11 @@ namespace DnsTwisterMonitor.Core.Services.Renders
 		{
 			var url = HttpUtility.UrlEncode(urlToSite);
 
-			var parameters = $"delay={Delay}&fullpage=0&url={url}";
+			var parameters = $"delay={DELAY}&fullpage=0&url={url}";
 
-			var securityHashUrl2Png = Md5HashPhpCompliant($"{UrlToPngPrivateKey}{parameters}").ToLower();
+			var securityHashUrl2Png = Md5HashPhpCompliant($"{PRIVATE_KEY}{parameters}").ToLower();
 
-			var url2PngLink = $"{UrlToPngBaseUrl}{UrlToPngApiKey}/{securityHashUrl2Png}/png/?{parameters}";
+			var url2PngLink = $"{BASE_URL}{API_KEY}/{securityHashUrl2Png}/png/?{parameters}";
 
 			return url2PngLink;
 		}
