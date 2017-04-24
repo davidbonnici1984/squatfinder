@@ -9,7 +9,7 @@ using SquatFinder.Web.Core.Services;
 using SquatFinder.Web.Core.Services.Domain;
 using SquatFinder.Web.Core.Services.Renders;
 
-namespace DnsTwisterMonitor
+namespace SquatFinder.Web
 {
 	public class Startup
 	{
