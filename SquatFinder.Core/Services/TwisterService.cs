@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+<<<<<<< HEAD:Core/Services/TwisterService.cs
 using AutoMapper;
 using SquatFinder.Web.Core.Http;
 using SquatFinder.Web.Core.Models;
 using SquatFinder.Web.Core.Services.Domain;
 using SquatFinder.Web.Core.Services.Renders;
+=======
+using SquatFinder.Core.Http;
+using SquatFinder.Core.Models;
+using SquatFinder.Core.Services.Domain;
+using SquatFinder.Core.Services.Renders;
+>>>>>>> master:SquatFinder.Core/Services/TwisterService.cs
 
-namespace SquatFinder.Web.Core.Services
+namespace SquatFinder.Core.Services
 {
 	public class TwisterService : ITwisterService
 	{
