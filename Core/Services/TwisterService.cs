@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using DnsTwisterMonitor.Core.Http;
 using DnsTwisterMonitor.Core.Models;
+using DnsTwisterMonitor.Core.Services.Domain;
 using DnsTwisterMonitor.Core.Services.Renders;
 
 namespace DnsTwisterMonitor.Core.Services
@@ -14,12 +15,14 @@ namespace DnsTwisterMonitor.Core.Services
 	{
 		private readonly ITwisterHttpClient _twisterHttpClient;
 		private readonly IImageRenderService _imageRenderService;
+		private readonly IDnsResolver _dnsResolver;
 
 		public TwisterService(ITwisterHttpClient twisterHttpClient,
-			IImageRenderService imageRenderService)
+			IImageRenderService imageRenderService, IDnsResolver dnsResolver)
 		{
 			_twisterHttpClient = twisterHttpClient;
 			_imageRenderService = imageRenderService;
+			_dnsResolver = dnsResolver;
 		}
 
 		public FuzzyResponseWrapper GetFuzzyDomains(string domain)
@@ -30,7 +33,7 @@ namespace DnsTwisterMonitor.Core.Services
 			var tasks = new Dictionary<FuzzyDomain, Task<bool>>();
 
 			foreach (var fuzzyDomain in domains.FuzzyDomainList)
-				tasks[fuzzyDomain] = GetHostEntry(fuzzyDomain.Domain);
+				tasks[fuzzyDomain] = _dnsResolver.GetHostEntry(fuzzyDomain.Domain);
 
 			Task.WaitAll(tasks.Values.ToArray());
 
@@ -43,26 +46,6 @@ namespace DnsTwisterMonitor.Core.Services
 					resultDomain.RenderedImageUrl = _imageRenderService.GenerateImageUrl(resultDomain.Domain);
 			}
 			return domains;
-		}
-
-		private static async Task<bool> GetHostEntry(string hostname)
-		{
-			try
-			{
-				Debug.WriteLine($"Dns Resolving for {hostname}");
-
-				if (string.IsNullOrWhiteSpace(hostname) || hostname.Length > 255) return false;
-
-				var host = await Dns.GetHostEntryAsync(hostname);
-
-				Debug.WriteLine($"Dns Resolving completd for {hostname}");
-
-				return host.Aliases.Length > 0 || host.AddressList.Length > 0;
-			}
-			catch
-			{
-				return false;
-			}
 		}
 	}
 }
