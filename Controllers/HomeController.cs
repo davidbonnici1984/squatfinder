@@ -18,15 +18,6 @@ namespace SquatFinder.Web.Controllers
 
 		public IActionResult Index()
 		{
-//
-//			var animal = new Animal()
-//			{
-//				Name = "David"
-//			};
-
-//			var obg = _mapper.Map<Animal, Person>(animal);
-
-
 			return View();
 		}
 

@@ -1,9 +1,10 @@
-﻿using SquatFinder.Web.Core.Models;
+﻿using System.Collections.Generic;
+using SquatFinder.Web.Core.Models;
 
 namespace SquatFinder.Web.Core.Services
 {
 	public interface ITwisterService
 	{
-		FuzzyResponseWrapper GetFuzzyDomains(string domain);
+		IList<FinderDomain> GetFuzzyDomains(string domain);
 	}
 }

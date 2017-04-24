@@ -3,7 +3,7 @@ using RestSharp.Deserializers;
 
 namespace SquatFinder.Web.Core.Models
 {
-	public class FuzzyResponseWrapper
+	public class DnsTwisterResponseWrapper
 	{
 		[DeserializeAs(Name = "domain")]
 		public string Domain { get; set; }
@@ -12,6 +12,6 @@ namespace SquatFinder.Web.Core.Models
 		public string DomainAsHexadecimal { get; set; }
 
 		[DeserializeAs(Name = "fuzzy_domains")]
-		public List<FuzzyDomain> FuzzyDomainList { get; set; }
+		public List<DnsTwisterDomain> FuzzyDomainList { get; set; }
 	}
 }

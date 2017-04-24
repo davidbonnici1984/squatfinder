@@ -4,6 +4,6 @@ namespace SquatFinder.Web.Core.Http
 {
 	public interface ITwisterHttpClient
 	{
-		FuzzyResponseWrapper GetFuzzyDomains(string domainName);
+		DnsTwisterResponseWrapper GetFuzzyDomains(string domainName);
 	}
 }

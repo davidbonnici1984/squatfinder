@@ -7,13 +7,13 @@ namespace SquatFinder.Web.Core.Http
 	{
 		private const string BASE_URL = "http://dnstwister.report/api/fuzz/";
 
-		public FuzzyResponseWrapper GetFuzzyDomains(string domainName)
+		public DnsTwisterResponseWrapper GetFuzzyDomains(string domainName)
 		{
 			var url = BASE_URL + domainName;
 			var client = new RestClient(url);
 			var request = new RestRequest(Method.GET);
 
-			var response = client.Execute<FuzzyResponseWrapper>(request);
+			var response = client.Execute<DnsTwisterResponseWrapper>(request);
 
 			return response.Data;
 		}
