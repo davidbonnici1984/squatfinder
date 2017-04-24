@@ -5,6 +5,13 @@ namespace DnsTwisterMonitor.Controllers
 {
 	public class HomeController : Controller
 	{
+		private readonly ITwisterService _twisterService;
+
+		public HomeController(ITwisterService twisterService)
+		{
+			_twisterService = twisterService;
+		}
+
 		public IActionResult Index()
 		{
 			return View();
@@ -13,11 +20,9 @@ namespace DnsTwisterMonitor.Controllers
 		[HttpPost]
 		public IActionResult Index(string domainName)
 		{
-			var domainTwisterService = new TwisterService();
+			var domainFuzzyList = _twisterService.GetFuzzyDomains(domainName);
 
-			var domainFuzzyList = domainTwisterService.GetFuzzyDomains(domainName);
-
-			return View(domainFuzzyList.Result);
+			return View(domainFuzzyList);
 		}
 
 

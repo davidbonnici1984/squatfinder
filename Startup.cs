@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using DnsTwisterMonitor.Core.Http;
+using DnsTwisterMonitor.Core.Services;
+using DnsTwisterMonitor.Core.Services.Renders;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +28,10 @@ namespace DnsTwisterMonitor
 		{
 			// Add framework services.
 			services.AddMvc();
+
+			services.AddTransient<ITwisterHttpClient, DnsTwisterHttpClient>();
+			services.AddTransient<ITwisterService, TwisterService>();
+			services.AddTransient<IImageRenderService, UrlToPngService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
