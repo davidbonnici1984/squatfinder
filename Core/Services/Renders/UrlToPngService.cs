@@ -6,8 +6,9 @@ namespace DnsTwisterMonitor.Core.Services.Renders
 {
     public class UrlToPngService : IImageRenderService
     {
-        private const string Url2PngApiKey = "P7FC1E9A0D0E091";
-        private const string Url2PngPrivateKey = "S_2D799EC4593F0";
+        private const string UrlToPngBaseUrl = "http://api.url2png.com/v6/";
+        private const string UrlToPngApiKey = "P7FC1E9A0D0E091";
+        private const string UrlToPngPrivateKey = "S_2D799EC4593F0";
         private const int Delay = 3;
 
         public string GenerateImageUrl(string domainUrl)
@@ -21,9 +22,9 @@ namespace DnsTwisterMonitor.Core.Services.Renders
 
             var parameters = $"delay={Delay}&fullpage=0&url={url}";
 
-            var securityHashUrl2Png = Md5HashPhpCompliant($"{Url2PngPrivateKey}{parameters}").ToLower();
+            var securityHashUrl2Png = Md5HashPhpCompliant($"{UrlToPngPrivateKey}{parameters}").ToLower();
 
-            var url2PngLink = $"http://api.url2png.com/v6/{Url2PngApiKey}/{securityHashUrl2Png}/png/?{parameters}";
+            var url2PngLink = $"{UrlToPngBaseUrl}{UrlToPngApiKey}/{securityHashUrl2Png}/png/?{parameters}";
 
             return url2PngLink;
         }
