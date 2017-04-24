@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using SquatFinder.Web.Core.Models;
+using SquatFinder.Core.Models;
 
-namespace SquatFinder.Web.Core.Mapping
+namespace SquatFinder.Core.Mapping
 {
 	public class DomainMappingProfile : Profile
 	{
