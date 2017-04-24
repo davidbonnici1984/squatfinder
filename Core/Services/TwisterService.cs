@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DnsTwisterMonitor.Core.Http;
 using DnsTwisterMonitor.Core.Models;
 using DnsTwisterMonitor.Core.Services.Renders;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace DnsTwisterMonitor.Core.Services
 {
 	public class TwisterService : ITwisterService
 	{
 		private readonly IImageRenderService _imageRenderService;
+
 		public TwisterService()
 		{
 			//_imageRenderService = new PageToImageService();
@@ -23,51 +24,45 @@ namespace DnsTwisterMonitor.Core.Services
 		{
 			var dnsClient = new DnsTwisterHttpClient();
 
-		    Debug.WriteLine($"{DateTime.UtcNow} - Starting Monitor on {domain}");
+			Debug.WriteLine($"{DateTime.UtcNow} - Starting Monitor on {domain}");
 			var domains = dnsClient.GetFuzzyDomains(domain);
 
-            var tasks = new Dictionary<FuzzyDomain, Task<bool>>();
+			var tasks = new Dictionary<FuzzyDomain, Task<bool>>();
 
-            foreach (var fuzzyDomain in domains.FuzzyDomainList)
-            {
-                tasks[fuzzyDomain] = GetHostEntry(fuzzyDomain.Domain);
+			foreach (var fuzzyDomain in domains.FuzzyDomainList)
+				tasks[fuzzyDomain] = GetHostEntry(fuzzyDomain.Domain);
+
+			Task.WaitAll(tasks.Values.ToArray());
+
+			foreach (var task in tasks)
+			{
+				var resultDomain = task.Key;
+				resultDomain.IsDomainValid = task.Value.Result;
+
+				if (resultDomain.IsDomainValid)
+					resultDomain.RenderedImageUrl = _imageRenderService.GenerateImageUrl(resultDomain.Domain);
 			}
+			return domains;
+		}
 
-            Task.WaitAll(tasks.Values.ToArray());
+		private static async Task<bool> GetHostEntry(string hostname)
+		{
+			try
+			{
+				Debug.WriteLine($"Dns Resolving for {hostname}");
 
-            foreach (var task in tasks)
-            {
-                var resultDomain = task.Key;
-                resultDomain.IsDomainValid = task.Value.Result;
+				if (string.IsNullOrWhiteSpace(hostname) || hostname.Length > 255) return false;
 
-                if (resultDomain.IsDomainValid)
-                {
-                    resultDomain.RenderedImageUrl = _imageRenderService.GenerateImageUrl(resultDomain.Domain);
-                }
-               
-            }
-            return domains;
-        }
+				var host = await Dns.GetHostEntryAsync(hostname);
 
-	    private static async Task<bool> GetHostEntry(string hostname)
-	    {
-	        try
-	        {
+				Debug.WriteLine($"Dns Resolving completd for {hostname}");
 
-                Debug.WriteLine($"Dns Resolving for {hostname}");
-
-	            if (string.IsNullOrWhiteSpace(hostname) || hostname.Length > 255) return false;
-
-	            var host =  await Dns.GetHostEntryAsync(hostname);
-
-                Debug.WriteLine($"Dns Resolving completd for {hostname}");
-
-                return host.Aliases.Length > 0 || host.AddressList.Length > 0;
-	        }
-	        catch
-	        {
-	            return false;
-	        }
-	    }
+				return host.Aliases.Length > 0 || host.AddressList.Length > 0;
+			}
+			catch
+			{
+				return false;
+			}
+		}
 	}
 }
