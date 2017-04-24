@@ -1,6 +1,6 @@
-imageName="dnstwistermonitor"
-projectName="dnstwistermonitor"
-serviceName="dnstwistermonitor"
+imageName="squatfinder"
+projectName="squatfinder"
+serviceName="squatfinder"
 containerName="${projectName}_${serviceName}_1"
 publicPort=5000
 url="http://localhost:$publicPort"

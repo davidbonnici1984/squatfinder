@@ -2,8 +2,8 @@
 version: '2'
 
 services:
-  dnstwistermonitor:
-    image: dnstwistermonitor:latest
+  squatfinder:
+    image: squatfinder:latest
     build:
       context: .
       dockerfile: Dockerfile

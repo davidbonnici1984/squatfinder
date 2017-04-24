@@ -1,13 +1,15 @@
-﻿using DnsTwisterMonitor.Core.Http;
-using DnsTwisterMonitor.Core.Services;
-using DnsTwisterMonitor.Core.Services.Renders;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SquatFinder.Web.Core.Http;
+using SquatFinder.Web.Core.Services;
+using SquatFinder.Web.Core.Services.Domain;
+using SquatFinder.Web.Core.Services.Renders;
 
-namespace DnsTwisterMonitor
+namespace SquatFinder.Web
 {
 	public class Startup
 	{
@@ -28,10 +30,12 @@ namespace DnsTwisterMonitor
 		{
 			// Add framework services.
 			services.AddMvc();
+			services.AddAutoMapper();
 
 			services.AddTransient<ITwisterHttpClient, DnsTwisterHttpClient>();
 			services.AddTransient<ITwisterService, TwisterService>();
 			services.AddTransient<IImageRenderService, UrlToPngService>();
+			services.AddTransient<IDnsResolver, DefaultDnsResolver>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

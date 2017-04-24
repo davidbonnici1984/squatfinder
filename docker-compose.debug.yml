@@ -2,7 +2,7 @@
 version: '2'
 
 services:
-  dnstwistermonitor:
+  squatfinder:
     build:
       args:
         source: obj/Docker/empty/

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using RestSharp.Deserializers;
 
-namespace DnsTwisterMonitor.Core.Models
+namespace SquatFinder.Web.Core.Models
 {
 	public class FuzzyResponseWrapper
 	{

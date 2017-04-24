@@ -6,7 +6,7 @@ Runs docker-compose.
 .PARAMETER Build
 Builds a Docker image.
 .PARAMETER Clean
-Removes the image dnstwistermonitor and kills all containers based on that image.
+Removes the image squatfinder and kills all containers based on that image.
 .PARAMETER ComposeForDebug
 Builds the image and runs docker-compose.
 .PARAMETER StartDebugging
@@ -15,7 +15,7 @@ Finds the running container and starts the debugger inside of it.
 The enviorment to build for (Debug or Release), defaults to Debug
 .EXAMPLE
 C:\PS> .\dockerTask.ps1 -Build
-Build a Docker image named dnstwistermonitor
+Build a Docker image named squatfinder
 #>
 
 Param(
@@ -37,9 +37,9 @@ Param(
     [String]$Environment = "Debug"
 )
 
-$imageName="dnstwistermonitor"
-$projectName="dnstwistermonitor"
-$serviceName="dnstwistermonitor"
+$imageName="squatfinder"
+$projectName="squatfinder"
+$serviceName="squatfinder"
 $containerName="${projectName}_${serviceName}_1"
 $publicPort=5000
 $url="http://localhost:$publicPort"

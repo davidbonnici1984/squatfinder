@@ -1,19 +1,32 @@
-﻿using DnsTwisterMonitor.Core.Services;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using SquatFinder.Web.Core.Services;
 
-namespace DnsTwisterMonitor.Controllers
+namespace SquatFinder.Web.Controllers
 {
 	public class HomeController : Controller
 	{
+		private readonly IMapper _mapper;
 		private readonly ITwisterService _twisterService;
 
-		public HomeController(ITwisterService twisterService)
+
+		public HomeController(ITwisterService twisterService, IMapper mapper)
 		{
 			_twisterService = twisterService;
+			_mapper = mapper;
 		}
 
 		public IActionResult Index()
 		{
+//
+//			var animal = new Animal()
+//			{
+//				Name = "David"
+//			};
+
+//			var obg = _mapper.Map<Animal, Person>(animal);
+
+
 			return View();
 		}
 
