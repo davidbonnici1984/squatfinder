@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DnsTwisterMonitor.Core.Http;
 using DnsTwisterMonitor.Core.Models;
 using DnsTwisterMonitor.Core.Services.Renders;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace DnsTwisterMonitor.Core.Services
 {
@@ -17,65 +19,52 @@ namespace DnsTwisterMonitor.Core.Services
 			_imageRenderService = new UrlToPngService();
 		}
 
-		public async Task<FuzzyResponseWrapper> GetFuzzyDomains(string domain)
+		public FuzzyResponseWrapper GetFuzzyDomains(string domain)
 		{
 			var dnsClient = new DnsTwisterHttpClient();
 
 		    Debug.WriteLine($"{DateTime.UtcNow} - Starting Monitor on {domain}");
 			var domains = dnsClient.GetFuzzyDomains(domain);
 
-			foreach (var fuzzyDomain in domains.FuzzyDomainList)
-			{
-			    Debug.WriteLine($"{DateTime.UtcNow} - Starting Fuzzy on {fuzzyDomain.FullDomainUrl}");
-			    fuzzyDomain.IsDomainValid = await GetHostEntry(fuzzyDomain.Domain);
-				if (fuzzyDomain.IsDomainValid)
-				{
-				    fuzzyDomain.RenderedImageUrl = _imageRenderService.GenerateImageUrl(domain);
-				}
+            var tasks = new Dictionary<FuzzyDomain, Task<bool>>();
+
+            foreach (var fuzzyDomain in domains.FuzzyDomainList)
+            {
+                tasks[fuzzyDomain] = GetHostEntry(fuzzyDomain.Domain);
 			}
 
-			var d = "123";
+            Task.WaitAll(tasks.Values.ToArray());
 
-			//var domainViewComponentList = MapToDomainViewComponent(domains);
+            foreach (var task in tasks)
+            {
+                var resultDomain = task.Key;
+                resultDomain.IsDomainValid = task.Value.Result;
 
-			// var domainTestResultViewModel = new MonitorTestResultViewModel
-			// {
-			// 	MonitorTestViewList = domainViewComponentList,
-			// 	DomainMonitored = domainViewRequest.Domain
-			// };
-
-			
-			//domainViewComponentList = await LookupHostEntries(domainViewComponentList);
-
-			//Group results by fuzzer types
-			/*var results = domainViewComponentList.GroupBy(
-				p => p.AlgorithmType, (type, grouped) =>
-				new DomainFuzzerType
-				{
-					FuzzerType = type,
-					Count = grouped.Count(),
-					Percentage = Convert.ToInt16((Convert.ToDecimal(grouped.Count()) / Convert.ToDecimal(domainViewComponentList.Count())) * 100m)
-				}).ToList();
-
-			domainTestResultViewModel.DomainFuzzerTypesList = results;
-			*/
-
-			//return domainTestResultViewModel;
-
-			return null;
-		}
+                if (resultDomain.IsDomainValid)
+                {
+                    resultDomain.RenderedImageUrl = _imageRenderService.GenerateImageUrl(resultDomain.Domain);
+                }
+               
+            }
+            return domains;
+        }
 
 	    private static async Task<bool> GetHostEntry(string hostname)
 	    {
 	        try
 	        {
+
+                Debug.WriteLine($"Dns Resolving for {hostname}");
+
 	            if (string.IsNullOrWhiteSpace(hostname) || hostname.Length > 255) return false;
 
 	            var host =  await Dns.GetHostEntryAsync(hostname);
 
-	            return host.Aliases.Length > 0 || host.AddressList.Length > 0;
+                Debug.WriteLine($"Dns Resolving completd for {hostname}");
+
+                return host.Aliases.Length > 0 || host.AddressList.Length > 0;
 	        }
-	        catch (Exception ex)
+	        catch
 	        {
 	            return false;
 	        }
