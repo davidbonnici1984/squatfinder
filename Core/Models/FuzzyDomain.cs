@@ -4,6 +4,8 @@ namespace SquatFinder.Web.Core.Models
 {
 	public class FuzzyDomain
 	{
+		private const string BASE_URL = "http://";
+
 		[DeserializeAs(Name = "domain")]
 		public string Domain { get; set; }
 
@@ -15,7 +17,7 @@ namespace SquatFinder.Web.Core.Models
 
 		public bool IsDomainValid { get; set; }
 
-		public string FullDomainUrl => $"http://{Domain}";
+		public string FullDomainUrl => $"{BASE_URL}{Domain}";
 		public string RenderedImageUrl { get; set; }
 	}
 }
