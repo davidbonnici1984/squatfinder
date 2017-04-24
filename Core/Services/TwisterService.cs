@@ -1,109 +1,84 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Net;
+using System.Threading.Tasks;
 using DnsTwisterMonitor.Core.Http;
 using DnsTwisterMonitor.Core.Models;
-using DnsTwisterMonitor.Core.ViewModels;
 using DnsTwisterMonitor.Core.Services.Renders;
 
 namespace DnsTwisterMonitor.Core.Services
 {
-    public class TwisterService
-    {
-        private readonly IImageRenderService _imageRenderService;
+	public class TwisterService : ITwisterService
+	{
+		private readonly IImageRenderService _imageRenderService;
+		public TwisterService()
+		{
+			//_imageRenderService = new PageToImageService();
+			_imageRenderService = new UrlToPngService();
+		}
 
-        public TwisterService()
-        {
-            _imageRenderService = new PageToImageService();
-        }
+		public async Task<FuzzyResponseWrapper> GetFuzzyDomains(string domain)
+		{
+			var dnsClient = new DnsTwisterHttpClient();
 
-        public MonitorTestResultViewModel GetFuzzyDomains(DomainViewRequest domainViewRequest)
-        {
-            var client = new TwisterHttpClient();
+		    Debug.WriteLine($"{DateTime.UtcNow} - Starting Monitor on {domain}");
+			var domains = dnsClient.GetFuzzyDomains(domain);
 
-            var domains = client.GetFuzzyDomains(domainViewRequest.Domain);
+			foreach (var fuzzyDomain in domains.FuzzyDomainList)
+			{
+			    Debug.WriteLine($"{DateTime.UtcNow} - Starting Fuzzy on {fuzzyDomain.FullDomainUrl}");
+			    fuzzyDomain.IsDomainValid = await GetHostEntry(fuzzyDomain.Domain);
+				if (fuzzyDomain.IsDomainValid)
+				{
+				    fuzzyDomain.RenderedImageUrl = _imageRenderService.GenerateImageUrl(domain);
+				}
+			}
 
-            var domainViewComponentList = MapToDomainViewComponent(domains);
+			var d = "123";
 
-            var domainTestResultViewModel = new MonitorTestResultViewModel
-            {
-                MonitorTestViewList = domainViewComponentList,
-                DomainMonitored = domainViewRequest.Domain,
-                DomainFuzzerTypesList = null
-            };
+			//var domainViewComponentList = MapToDomainViewComponent(domains);
 
+			// var domainTestResultViewModel = new MonitorTestResultViewModel
+			// {
+			// 	MonitorTestViewList = domainViewComponentList,
+			// 	DomainMonitored = domainViewRequest.Domain
+			// };
 
-            foreach (var domain in domainTestResultViewModel.MonitorTestViewList)
-            {
-                domain.IsValid = DoGetHostEntry(domain.Url);
-            }
+			
+			//domainViewComponentList = await LookupHostEntries(domainViewComponentList);
 
+			//Group results by fuzzer types
+			/*var results = domainViewComponentList.GroupBy(
+				p => p.AlgorithmType, (type, grouped) =>
+				new DomainFuzzerType
+				{
+					FuzzerType = type,
+					Count = grouped.Count(),
+					Percentage = Convert.ToInt16((Convert.ToDecimal(grouped.Count()) / Convert.ToDecimal(domainViewComponentList.Count())) * 100m)
+				}).ToList();
 
-            //Group results by fuzzer types
-            var results = domainViewComponentList.GroupBy(
-                p => p.AlgorithmType, (type, grouped) =>
-                new DomainFuzzerType
-                {
-                    FuzzerType = type,
-                    Count = grouped.Count(),
-                    Percentage = Convert.ToInt16((Convert.ToDecimal(grouped.Count()) / Convert.ToDecimal(domainViewComponentList.Count())) * 100m)
-                }).ToList();
+			domainTestResultViewModel.DomainFuzzerTypesList = results;
+			*/
 
-            domainTestResultViewModel.DomainFuzzerTypesList = results;
+			//return domainTestResultViewModel;
 
-            return domainTestResultViewModel;
-        }
+			return null;
+		}
 
-        private bool DoGetHostEntry(string hostname)
-        {
-            try
-            {
-                var host = Dns.GetHostEntryAsync(hostname).Result;
+	    private static async Task<bool> GetHostEntry(string hostname)
+	    {
+	        try
+	        {
+	            if (string.IsNullOrWhiteSpace(hostname) || hostname.Length > 255) return false;
 
-                if (host.Aliases.Length > 0 || host.AddressList.Length > 0)
-                {
-                    return true;
-                }
+	            var host =  await Dns.GetHostEntryAsync(hostname);
 
-                return false;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-          
-        }
-
-
-        private List<MonitorTestViewModel> MapToDomainViewComponent(TwisterResponseWrapper wrapper)
-        {
-            return wrapper.FuzzyDomainList.Select(fuzzyDomain => new MonitorTestViewModel()
-            {
-                Url = fuzzyDomain.Domain,
-                ImageUrl = _imageRenderService.GenerateImageUrl(fuzzyDomain.Domain),
-                AlgorithmType = fuzzyDomain.FuzzerType,
-                RedirectUrl = $"http://{fuzzyDomain.Domain}"
-            })
-                .ToList();
-        }
-
-
-    }
-
-    public static class LinqExtentions
-    {
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
-            (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-        {
-            HashSet<TKey> seenKeys = new HashSet<TKey>();
-            foreach (TSource element in source)
-            {
-                if (seenKeys.Add(keySelector(element)))
-                {
-                    yield return element;
-                }
-            }
-        }
-    }
+	            return host.Aliases.Length > 0 || host.AddressList.Length > 0;
+	        }
+	        catch (Exception ex)
+	        {
+	            return false;
+	        }
+	    }
+	}
 }

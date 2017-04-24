@@ -2,9 +2,9 @@
 
 namespace DnsTwisterMonitor.Core.Http
 {
-    public interface ITwisterHttpClient
-    {
-        TwisterResponseWrapper GetFuzzyDomains(string domainName);
-    }
+	public interface ITwisterHttpClient
+	{
+		FuzzyResponseWrapper GetFuzzyDomains(string domainName);
+	}
 }
 
