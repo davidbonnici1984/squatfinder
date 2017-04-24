@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 
-namespace SquatFinder.Web.Core.Services.Domain
+namespace SquatFinder.Core.Services.Domain
 {
 	public class DefaultDnsResolver : IDnsResolver
 	{

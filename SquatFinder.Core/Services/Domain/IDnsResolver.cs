@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SquatFinder.Web.Core.Services.Domain
+namespace SquatFinder.Core.Services.Domain
 {
 	public interface IDnsResolver
 	{

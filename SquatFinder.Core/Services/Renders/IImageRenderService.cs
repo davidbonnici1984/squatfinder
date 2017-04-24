@@ -1,4 +1,4 @@
-﻿namespace SquatFinder.Web.Core.Services.Renders
+﻿namespace SquatFinder.Core.Services.Renders
 {
 	public interface IImageRenderService
 	{

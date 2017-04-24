@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SquatFinder.Web.Core.Http;
-using SquatFinder.Web.Core.Services;
-using SquatFinder.Web.Core.Services.Domain;
-using SquatFinder.Web.Core.Services.Renders;
+using SquatFinder.Core.Http;
+using SquatFinder.Core.Services;
+using SquatFinder.Core.Services.Domain;
+using SquatFinder.Core.Services.Renders;
 
 namespace SquatFinder.Web
 {

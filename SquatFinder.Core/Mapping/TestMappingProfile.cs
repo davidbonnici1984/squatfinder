@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace SquatFinder.Web.Core.Mapping
+namespace SquatFinder.Core.Mapping
 {
 	public class TestMappingProfile : Profile
 	{

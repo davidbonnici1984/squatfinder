@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using RestSharp.Deserializers;
 
-namespace SquatFinder.Web.Core.Models
+namespace SquatFinder.Core.Models
 {
 	public class FuzzyResponseWrapper
 	{

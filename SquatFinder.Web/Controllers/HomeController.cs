@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SquatFinder.Web.Core.Services;
+using SquatFinder.Core.Services;
 
 namespace SquatFinder.Web.Controllers
 {

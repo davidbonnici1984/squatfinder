@@ -2,7 +2,7 @@
 using System.Text;
 using RestSharp.Extensions.MonoHttp;
 
-namespace SquatFinder.Web.Core.Services.Renders
+namespace SquatFinder.Core.Services.Renders
 {
 	public class UrlToPngService : IImageRenderService
 	{

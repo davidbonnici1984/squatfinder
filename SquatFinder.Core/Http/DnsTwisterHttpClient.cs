@@ -1,7 +1,7 @@
 ﻿using RestSharp;
-using SquatFinder.Web.Core.Models;
+using SquatFinder.Core.Models;
 
-namespace SquatFinder.Web.Core.Http
+namespace SquatFinder.Core.Http
 {
 	public class DnsTwisterHttpClient : ITwisterHttpClient
 	{
