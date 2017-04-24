@@ -12,20 +12,20 @@ namespace DnsTwisterMonitor.Core.Services
 {
 	public class TwisterService : ITwisterService
 	{
+		private readonly ITwisterHttpClient _twisterHttpClient;
 		private readonly IImageRenderService _imageRenderService;
 
-		public TwisterService()
+		public TwisterService(ITwisterHttpClient twisterHttpClient,
+			IImageRenderService imageRenderService)
 		{
-			//_imageRenderService = new PageToImageService();
-			_imageRenderService = new UrlToPngService();
+			_twisterHttpClient = twisterHttpClient;
+			_imageRenderService = imageRenderService;
 		}
 
 		public FuzzyResponseWrapper GetFuzzyDomains(string domain)
 		{
-			var dnsClient = new DnsTwisterHttpClient();
-
 			Debug.WriteLine($"{DateTime.UtcNow} - Starting Monitor on {domain}");
-			var domains = dnsClient.GetFuzzyDomains(domain);
+			var domains = _twisterHttpClient.GetFuzzyDomains(domain);
 
 			var tasks = new Dictionary<FuzzyDomain, Task<bool>>();
 
