@@ -12,4 +12,7 @@
       <Version>105.2.4-rc4-24214-01</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\ViewModels" />
+  </ItemGroup>
 </Project>

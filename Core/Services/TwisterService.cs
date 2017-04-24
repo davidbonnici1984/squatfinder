@@ -1,78 +1,73 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
 using DnsTwisterMonitor.Core.Http;
 using DnsTwisterMonitor.Core.Models;
-using DnsTwisterMonitor.Core.ViewModels;
 using DnsTwisterMonitor.Core.Services.Renders;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace DnsTwisterMonitor.Core.Services
 {
-    public class TwisterService
-    {
-        private readonly IImageRenderService _imageRenderService;
+	public class TwisterService : ITwisterService
+	{
+		private readonly IImageRenderService _imageRenderService;
+		public TwisterService()
+		{
+			//_imageRenderService = new PageToImageService();
+			_imageRenderService = new UrlToPngService();
+		}
 
-        public TwisterService()
-        {
-            _imageRenderService = new PageToImageService();
-        }
+		public FuzzyResponseWrapper GetFuzzyDomains(string domain)
+		{
+			var dnsClient = new DnsTwisterHttpClient();
 
-        public MonitorTestResultViewModel GetFuzzyDomains(DomainViewRequest domainViewRequest)
-        {
-            var client = new TwisterHttpClient();
+		    Debug.WriteLine($"{DateTime.UtcNow} - Starting Monitor on {domain}");
+			var domains = dnsClient.GetFuzzyDomains(domain);
 
-            var domains = client.GetFuzzyDomains(domainViewRequest.Domain);
+            var tasks = new Dictionary<FuzzyDomain, Task<bool>>();
 
-            var domainViewComponentList = MapToDomainViewComponent(domains);
-
-            var domainTestResultViewModel = new MonitorTestResultViewModel
+            foreach (var fuzzyDomain in domains.FuzzyDomainList)
             {
-                MonitorTestViewList = domainViewComponentList,
-                DomainMonitored = domainViewRequest.Domain,
-                DomainFuzzerTypesList = null
-            };
+                tasks[fuzzyDomain] = GetHostEntry(fuzzyDomain.Domain);
+			}
 
-            //Group results by fuzzer types
-            var list = domainViewComponentList.DistinctBy(i => i.AlgorithmType);
+            Task.WaitAll(tasks.Values.ToArray());
 
-            domainTestResultViewModel.DomainFuzzerTypesList = new List<DomainFuzzerType>
+            foreach (var task in tasks)
             {
-                new DomainFuzzerType()
+                var resultDomain = task.Key;
+                resultDomain.IsDomainValid = task.Value.Result;
+
+                if (resultDomain.IsDomainValid)
                 {
+                    resultDomain.RenderedImageUrl = _imageRenderService.GenerateImageUrl(resultDomain.Domain);
                 }
-            };
-
-            return domainTestResultViewModel;
-        }
-
-        private List<MonitorTestViewModel> MapToDomainViewComponent(TwisterResponseWrapper wrapper)
-        {
-            return wrapper.FuzzyDomainList.Select(fuzzyDomain => new MonitorTestViewModel()
-                {
-                    Url = fuzzyDomain.Domain,
-                    ImageUrl = _imageRenderService.GenerateImageUrl(fuzzyDomain.Domain),
-                    AlgorithmType = fuzzyDomain.FuzzerType,
-                    RedirectUrl = $"http://{fuzzyDomain.Domain}"
-                })
-                .ToList();
-        }
-
-
-    }
-
-    public static class LinqExtentions
-    {
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
-            (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-        {
-            HashSet<TKey> seenKeys = new HashSet<TKey>();
-            foreach (TSource element in source)
-            {
-                if (seenKeys.Add(keySelector(element)))
-                {
-                    yield return element;
-                }
+               
             }
+            return domains;
         }
-    }
+
+	    private static async Task<bool> GetHostEntry(string hostname)
+	    {
+	        try
+	        {
+
+                Debug.WriteLine($"Dns Resolving for {hostname}");
+
+	            if (string.IsNullOrWhiteSpace(hostname) || hostname.Length > 255) return false;
+
+	            var host =  await Dns.GetHostEntryAsync(hostname);
+
+                Debug.WriteLine($"Dns Resolving completd for {hostname}");
+
+                return host.Aliases.Length > 0 || host.AddressList.Length > 0;
+	        }
+	        catch
+	        {
+	            return false;
+	        }
+	    }
+	}
 }

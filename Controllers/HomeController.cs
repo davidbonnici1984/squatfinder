@@ -1,5 +1,4 @@
 ﻿using DnsTwisterMonitor.Core.Services;
-using DnsTwisterMonitor.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DnsTwisterMonitor.Controllers
@@ -16,12 +15,9 @@ namespace DnsTwisterMonitor.Controllers
         {
             var domainTwisterService = new TwisterService();
 
-            var domainFuzzyList = domainTwisterService.GetFuzzyDomains(new DomainViewRequest()
-            {
-                Domain = domainName
-            });
+            var domainFuzzyList = domainTwisterService.GetFuzzyDomains(domainName);
 
-            return View(domainFuzzyList);
+            return View(domainFuzzyList.Result);
         }
 
 
