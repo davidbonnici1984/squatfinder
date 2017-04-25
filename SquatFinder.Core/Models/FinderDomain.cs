@@ -1,13 +1,11 @@
-﻿using System.Runtime.Serialization;
-
-namespace SquatFinder.Core.Models
+﻿namespace SquatFinder.Core.Models
 {
 	public class FinderDomain
 	{
 		private const string BASE_URL = "http://";
-		
+
 		public string Domain { get; set; }
-		
+
 		public AlgorithmType AlgorithmType { get; set; }
 
 		public string AlgorithmName => AlgorithmType.ToString();

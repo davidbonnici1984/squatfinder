@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SquatFinder.Core.Models;
 using SquatFinder.Core.Services;
 
@@ -15,7 +13,7 @@ namespace SquatFinder.WebApi.Controllers
 		{
 			_twisterService = twisterService;
 		}
-		
+
 		// GET api/domain/{domain}
 		[HttpGet("{domain}")]
 		public AnalysisResult Get(string domain)

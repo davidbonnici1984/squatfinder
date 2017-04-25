@@ -39,14 +39,12 @@ namespace SquatFinder.WebApi
 			services.AddTransient<IImageRenderService, UrlToPngService>();
 			services.AddTransient<IDnsResolver, DefaultDnsResolver>();
 
-			JsonConvert.DefaultSettings = (() =>
+			JsonConvert.DefaultSettings = () =>
 			{
 				var settings = new JsonSerializerSettings();
-				settings.Converters.Add(new StringEnumConverter { CamelCaseText = false });
+				settings.Converters.Add(new StringEnumConverter {CamelCaseText = false});
 				return settings;
-			});
-
-
+			};
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
