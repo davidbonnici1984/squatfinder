@@ -15,11 +15,11 @@ namespace SquatFinder.Core.Services
 	{
 		private readonly IDnsResolver _dnsResolver;
 		private readonly IImageRenderService _imageRenderService;
-		private readonly ITwisterHttpClient _twisterHttpClient;
 		private readonly IMapper _mapper;
+		private readonly ITwisterHttpClient _twisterHttpClient;
 
 		public TwisterService(ITwisterHttpClient twisterHttpClient,
-			IImageRenderService imageRenderService, 
+			IImageRenderService imageRenderService,
 			IDnsResolver dnsResolver,
 			IMapper mapper)
 		{
@@ -35,7 +35,7 @@ namespace SquatFinder.Core.Services
 			var domains = _twisterHttpClient.GetFuzzyDomains(domain);
 
 			var finderDomains = Map(domains.FuzzyDomainList);
-			
+
 			var tasks = new Dictionary<FinderDomain, Task<bool>>();
 
 			foreach (var finderDomain in finderDomains)

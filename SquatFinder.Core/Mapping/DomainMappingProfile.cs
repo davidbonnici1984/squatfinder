@@ -40,7 +40,7 @@ namespace SquatFinder.Core.Mapping
 					return AlgorithmType.Transposition;
 				case "Vowel swap":
 					return AlgorithmType.VowelSwap;
-				case "Various": 
+				case "Various":
 					return AlgorithmType.Various;
 			}
 

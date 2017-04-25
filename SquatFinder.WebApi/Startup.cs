@@ -1,8 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SquatFinder.Core.Http;
+using SquatFinder.Core.Services;
+using SquatFinder.Core.Services.Domain;
+using SquatFinder.Core.Services.Renders;
 
 namespace SquatFinder.WebApi
 {
@@ -25,6 +32,21 @@ namespace SquatFinder.WebApi
 		{
 			// Add framework services.
 			services.AddMvc();
+			services.AddAutoMapper();
+
+			services.AddTransient<ITwisterHttpClient, DnsTwisterHttpClient>();
+			services.AddTransient<ITwisterService, TwisterService>();
+			services.AddTransient<IImageRenderService, UrlToPngService>();
+			services.AddTransient<IDnsResolver, DefaultDnsResolver>();
+
+			JsonConvert.DefaultSettings = (() =>
+			{
+				var settings = new JsonSerializerSettings();
+				settings.Converters.Add(new StringEnumConverter { CamelCaseText = false });
+				return settings;
+			});
+
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

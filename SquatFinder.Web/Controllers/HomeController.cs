@@ -1,19 +1,16 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SquatFinder.Core.Services;
 
 namespace SquatFinder.Web.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly IMapper _mapper;
 		private readonly ITwisterService _twisterService;
 
 
-		public HomeController(ITwisterService twisterService, IMapper mapper)
+		public HomeController(ITwisterService twisterService)
 		{
 			_twisterService = twisterService;
-			_mapper = mapper;
 		}
 
 		public IActionResult Index()
