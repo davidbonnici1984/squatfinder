@@ -3,3 +3,8 @@ mono: none
 dotnet: 1.0.1
 dist: trusty
 solution: SquatFinder.sln
+#sudo: required
+install:
+    - nuget restore $TRAVIS_SOLUTION
+script:
+    - xbuild /p:Configuration=Debug $TRAVIS_SOLUTION
