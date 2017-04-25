@@ -1,4 +1,4 @@
-# Squat-Finder
+# Squatfinder
 
 [![Build status](https://travis-ci.org/davidbonnici1984/squat-finder.svg?branch=master)](https://travis-ci.org/davidbonnici1984/squat-finder)
 
