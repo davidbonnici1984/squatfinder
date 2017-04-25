@@ -5,6 +5,6 @@ namespace SquatFinder.Core.Services
 {
 	public interface ITwisterService
 	{
-		IList<FinderDomain> GetFuzzyDomains(string domain);
+		AnalysisResult GetFuzzyDomains(string domain);
 	}
 }

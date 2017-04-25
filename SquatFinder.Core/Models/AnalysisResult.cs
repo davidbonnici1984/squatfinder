@@ -5,18 +5,20 @@ namespace SquatFinder.Core.Models
 {
 	public class AnalysisResult
 	{
-		public IList<FinderDomain> DomainList { get; set; }
+		public IList<FinderDomain> SearchResult { get; set; }
 
-		public Dictionary<string, int> AlgorithmGroupedResult
-		{
-			get
-			{
-				var data = DomainList.GroupBy(c => c.AlgorithmName).ToDictionary(x => x.Key, x => x.Count());
+		public IList<AlgorithmResultsStatistics> ResultStatistics { get; set; }
 
-				return data;
-			}
-		}
-
-		public int TotalDomains => DomainList?.Count ?? 0;
+		public int TotalDomains => SearchResult?.Count ?? 0;
 	}
+
+	public class AlgorithmResultsStatistics
+	{
+		public string Name { get; set; }
+		
+		public int Count { get; set; }
+
+		public int Percentage { get; set; }
+	}
+
 }

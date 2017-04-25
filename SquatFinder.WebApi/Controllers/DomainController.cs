@@ -1,26 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SquatFinder.Core.Models;
 using SquatFinder.Core.Services;
 
 namespace SquatFinder.WebApi.Controllers
 {
 	[Route("api/[controller]")]
-	public class DomainController : Controller
+	public class DomainsController : Controller
 	{
 		private readonly ITwisterService _twisterService;
 
-		public DomainController(ITwisterService twisterService)
+		public DomainsController(ITwisterService twisterService)
 		{
 			_twisterService = twisterService;
 		}
 
 		// GET api/domain/{domain}
 		[HttpGet("{domain}")]
-		public AnalysisResult Get(string domain)
+		public IActionResult Get(string domain)
 		{
-			var result = new AnalysisResult {DomainList = _twisterService.GetFuzzyDomains(domain)};
+			if (string.IsNullOrEmpty(domain))
+				return NotFound();
 
-			return result;
+			var data = _twisterService.GetFuzzyDomains(domain);
+
+			return new ObjectResult(data);
 		}
 	}
 }

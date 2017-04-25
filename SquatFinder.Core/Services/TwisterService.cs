@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -29,20 +28,22 @@ namespace SquatFinder.Core.Services
 			_mapper = mapper;
 		}
 
-		public IList<FinderDomain> GetFuzzyDomains(string domain)
+		public AnalysisResult GetFuzzyDomains(string domain)
 		{
-			Debug.WriteLine($"{DateTime.UtcNow} - Starting Monitor on {domain}");
 			var domains = _twisterHttpClient.GetFuzzyDomains(domain);
 
 			var finderDomains = Map(domains.FuzzyDomainList);
-
+			
 			var tasks = new Dictionary<FinderDomain, Task<bool>>();
 
+			//Create tasks
 			foreach (var finderDomain in finderDomains)
 				tasks[finderDomain] = _dnsResolver.GetHostEntry(finderDomain.Domain);
 
+			//Fire all tasks async
 			Task.WaitAll(tasks.Values.ToArray());
-
+			
+			//Validate Result
 			foreach (var task in tasks)
 			{
 				var resultDomain = task.Key;
@@ -51,7 +52,29 @@ namespace SquatFinder.Core.Services
 				if (resultDomain.IsValidDomain)
 					resultDomain.ScreenshotImageUrl = _imageRenderService.GenerateImageUrl(resultDomain.Domain);
 			}
-			return finderDomains;
+
+			//Group Results by Algorithm Type
+			var result = new AnalysisResult
+			{
+				SearchResult = finderDomains,
+				ResultStatistics = BuildAlgorithmResultStatisics(finderDomains)
+			};
+
+			return result;
+		}
+
+		private static IList<AlgorithmResultsStatistics> BuildAlgorithmResultStatisics(ICollection<FinderDomain> domains)
+		{
+			var data = domains.GroupBy(c => c.AlgorithmName);
+
+			var algorithmResultsStatisticsList = data.Select(item => new AlgorithmResultsStatistics()
+			{
+				Name = item.Key,
+				Count = item.ToList().Count,
+				Percentage = (int)Math.Round((double)(100 * item.ToList().Count) / domains.Count)
+			}).ToList();
+
+			return algorithmResultsStatisticsList;
 		}
 
 		private IList<FinderDomain> Map(IList<DnsTwisterDomain> dnsTwisterDomainList)
