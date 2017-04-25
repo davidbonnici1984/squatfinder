@@ -1,10 +1,9 @@
 language: csharp
-mono: none
 dotnet: 1.0.1
 dist: trusty
 solution: SquatFinder.sln
-#sudo: required
+sudo: true
 install:
     - nuget restore $TRAVIS_SOLUTION
 script:
-    - xbuild /p:Configuration=Debug $TRAVIS_SOLUTION
+    - xbuild /p:Configuration='Debug' $TRAVIS_SOLUTION
