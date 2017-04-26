@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SquatFinder.Web", "SquatFinder.Web\SquatFinder.Web.csproj", "{9B06C13C-3539-4BFD-8A6B-03A3B5325CE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SquatFinder.Web", "src\SquatFinder.Web\SquatFinder.Web.csproj", "{9B06C13C-3539-4BFD-8A6B-03A3B5325CE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquatFinder.Core", "SquatFinder.Core\SquatFinder.Core.csproj", "{24247EBD-3B04-453E-A724-FDA93E82C4E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquatFinder.Core", "src\SquatFinder.Core\SquatFinder.Core.csproj", "{24247EBD-3B04-453E-A724-FDA93E82C4E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquatFinder.WebApi", "SquatFinder.WebApi\SquatFinder.WebApi.csproj", "{A62B9EA8-7B41-4C85-BF40-B8566298C86C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SquatFinder.WebApi", "src\SquatFinder.WebApi\SquatFinder.WebApi.csproj", "{A62B9EA8-7B41-4C85-BF40-B8566298C86C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
