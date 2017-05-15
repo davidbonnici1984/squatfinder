@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceRoot}/bin/Debug/netcoreapp1.1/DnsTwisterMonitor.dll",
+            "program": "${workspaceRoot}/src/SquatFinder.Web/bin/Debug/netcoreapp1.1/SquatFinder.Web.dll",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/src/SquatFinder.Web",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
@@ -33,7 +33,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/Views"
+                "/Views": "${workspaceRoot}/src/SquatFinder.Web/Views"
             }
         },
         {
